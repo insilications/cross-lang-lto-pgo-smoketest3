@@ -2,11 +2,11 @@
 #include "clib.h"
 
 uint32_t c_always_inlined() {
-    return 1234;
+    return 1;
 }
 
 uint32_t c_never_inlined() {
-    return 12345;
+    return 5;
 }
 
 // uint32_t __attribute__((always_inline)) c_always_inlined() {
