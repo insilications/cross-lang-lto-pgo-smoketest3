@@ -1,5 +1,5 @@
 // #[link(name = "xyz")]
-#[link(name = "xyz")]
+#[link(name = "xyz", kind="static")]
 extern "C" {
     pub fn c_always_inlined() -> u32;
     pub fn c_never_inlined() -> u32;
