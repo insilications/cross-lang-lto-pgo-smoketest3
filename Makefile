@@ -43,6 +43,7 @@ CFLAGS_USE=$(CFLAGS_PGO_USE) $(PASS_MANAGER_CFLAGS) -fembed-bitcode -mllvm -impo
 
 rust1:
 	-@rm /var/tmp/pgo/* || :
+	-@rm ./*.rlib || :
 	-@rm ./*.o || :
 	-@rm ./*.old || :
 	-@rm ./*.data || :
@@ -117,6 +118,7 @@ rust1:
 
 rust2:
 	-@rm ./*.o || :
+	-@rm ./*.rlib || :
 	-@rm ./*.i || :
 	-@rm ./*.a || :
 	-@rm ./*.ll || :
@@ -141,6 +143,7 @@ rust2:
 
 rustc:
 	-@rm /var/tmp/pgo/* || :
+	-@rm ./*.rlib || :
 	-@rm ./*.old || :
 	-@rm ./*.data || :
 	-@rm ./*.profraw || :
