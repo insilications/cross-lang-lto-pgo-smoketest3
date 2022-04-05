@@ -8,7 +8,7 @@ PASS_MANAGER_RUST=-Znew-llvm-pass-manager=yes -Clink-arg=-fno-legacy-pass-manage
 # -Cforce-unwind-tables=on
 # PASS_MANAGER_RUST=-Znew-llvm-pass-manager=yes -Clink-arg=-Wl,--plugin-opt=-enable-npm-pgo-inline-deferral
 # RUST_PGO_GEN=-Clink-arg=-fprofile-generate=/var/tmp/pgo -Cprofile-generate=/var/tmp/pgo
-RUST_PGO_GEN=-Zdebug-info-for-profiling=yes -Clink-arg=-g -Clink-arg=-Wl,--no-rosegment -Clink-arg=-fprofile-update=atomic
+RUST_PGO_GEN=-Zdebug-info-for-profiling=yes -Clink-arg=-g -Clink-arg=-Wl,--no-rosegment -Clink-arg=-fprofile-update=atomic -Cinstrument-coverage=all
 # RUST_PGO_GEN=-Cprofile-generate=/var/tmp/pgo -Clink-arg=-fprofile-update=atomic
 COMMON_FLAGS_GEN=$(RUST_PGO_GEN) $(PASS_MANAGER_RUST) -Clto=fat -Clinker-plugin-lto=on -Clink-arg=-flto=full -Zunstable-options -Clinker=clang -Clink-arg=-fuse-ld=lld -Copt-level=3 -Ccodegen-units=34 -Cpanic=abort -Cembed-bitcode=yes -L. --verbose -Clink-arg=--verbose -Clink-arg=-Wl,--verbose -Clink-arg=-L. --print link-args -Ctarget-feature=+crt-static -Crelocation-model=static -Ztune-cpu=native -Clink-arg=-Wl,-plugin-opt=mcpu=native -Ctarget-cpu=native -Clink-arg=-march=native -Clink-arg=-mtune=native -Zunstable-options -Csave-temps=yes -Clink-arg=-Wl,--plugin-opt=save-temps -Clink-arg=-Wl,--save-temps -Clink-arg=--save-temps -Cprefer-dynamic=no -Clink-arg=-Wl,--mllvm=-inlinehint-threshold=19000 -Clink-arg=-Wl,--mllvm=-inlinedefault-threshold=19000 -Clink-arg=-Wl,--mllvm=-inlinecold-threshold=19000 -Clink-arg=-Wl,--mllvm=-inline-cost-full -Clink-arg=-Wl,--mllvm=-inline-cold-callsite-threshold=19000 -Clink-arg=-Wl,--mllvm=-inline-threshold=19000 -Clink-arg=-Wl,--plugin-opt=-inlinehint-threshold=19000 -Clink-arg=-Wl,--plugin-opt=-inlinedefault-threshold=19000 -Clink-arg=-Wl,--plugin-opt=-inlinecold-threshold=19000 -Clink-arg=-Wl,--plugin-opt=-inline-cold-callsite-threshold=19000 -Clink-arg=-Wl,--plugin-opt=-inline-threshold=19000 -Cllvm-args=-inline-threshold=19000 -Cinline-threshold=19000  -Zprint-llvm-passes=yes -Zmir-opt-level=4 -Zinline-mir=yes -Zinline-mir-threshold=500  -Cllvm-args=-import-instr-limit=33000 -Clink-arg=-Wl,--mllvm=-import-instr-limit=33000 -Cllvm-args=-import-all-index -Clink-arg=-Wl,--mllvm=-import-all-index -Cllvm-args=-import-full-type-definitions -Clink-arg=-Wl,--mllvm=-import-full-type-definitions -Cllvm-args=-import-instr-evolution-factor=2 -Clink-arg=-Wl,--mllvm=-import-instr-evolution-factor=6 -Clink-arg=-fwhole-program-vtables -Clink-arg=-fforce-emit-vtables -Clink-arg=-Wl,--lto-unique-basic-block-section-names -Clink-arg=-funique-internal-linkage-names -Clink-arg=-Wl,--lto-basic-block-sections=labels -Clink-arg=-Wl,--lto-whole-program-visibility -Cllvm-args=-intra-scc-cost-multiplier=1 -Clink-arg=-Wl,--mllvm=-intra-scc-cost-multiplier=1  -Zthinlto=no -Cforce-unwind-tables=on -Clinker-plugin-lto=on -Clto=fat -Clink-arg=-flto=full -Zunstable-options -Clink-arg=-fno-legacy-pass-manager -Znew-llvm-pass-manager=yes -Zrelro-level=full -Zverify-llvm-ir=yes -Clink-arg=--verbose -Cllvm-args=--x86-use-vzeroupper=0 -Clink-self-contained=off -Coverflow-checks=off -Cstrip=none -Cdebug-assertions=yes -Cdebuginfo=2 -Ctarget-cpu=native -Cprefer-dynamic=no -Zplt=off -Ztune-cpu=native -Copt-level=3 -Ccodegen-units=1 -Cembed-bitcode=yes -Ctarget-feature=+crt-static -Ctarget-feature=-vzeroupper -Crelocation-model=static -Cforce-frame-pointers=off -Cpanic=abort -Clinker=clang -Clink-arg=-Wno-unused-command-line-argument -Clink-arg=-Wall -Clink-arg=-Wl,--lto-partitions=1 -Clink-arg=-Wl,--enable-new-dtags -Clink-arg=-Wl,-plugin-opt=O3,-plugin-opt=mcpu=native,-plugin-opt=lto-partitions=1 -Clink-arg=-Wl,--lto-O3 -Clink-arg=-Wl,-O2 -Clink-arg=-O3 -Clink-arg=-mno-vzeroupper -Clink-arg=-march=native -Clink-arg=-mtune=native -Clink-arg=-fuse-ld=lld -Clink-arg=-Wl,--as-needed -Clink-arg=-Wl,--enable-new-dtags -Clink-arg=-Wl,-mllvm,-x86-use-vzeroupper=0 -Clink-arg=-Wl,-z,now,-z,relro,-z,max-page-size=0x1000,-z,separate-code -Clink-arg=-Wno-error -Clink-arg=-mprefer-vector-width=256 -Clink-arg=-falign-functions=32 -Clink-arg=-fno-semantic-interposition -Clink-arg=-Wl,-Bsymbolic-functions -Clink-arg=-fno-stack-protector -Clink-arg=-fno-trapping-math -Clink-arg=-fno-math-errno -Clink-arg=-ftree-slp-vectorize -Clink-arg=-ftree-vectorize -Clink-arg=-feliminate-unused-debug-types -Clink-arg=-fno-plt -Clink-arg=-Wno-error -Clink-arg=-Wp,-D_REENTRANT -Clink-arg=-fvisibility-inlines-hidden -Clink-arg=-fomit-frame-pointer -Clink-arg=-static-libstdc++ -Clink-arg=-static-libgcc -Clink-arg=-pthread  -Clink-arg=-gdwarf-4 -Cllvm-args=--dwarf-version=4 -Clink-arg=-Wl,--build-id=sha1 -Clink-arg=-fasynchronous-unwind-tables
 #-Ctarget-feature=+crt-static -Crelocation-model=static -Csave-temps=yes
@@ -175,12 +175,13 @@ tt1:
 	/usr/bin/create_llvm_prof --binary=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/teste --profile=perf.data --out=merged.data
 	sudo chown boni:boni *.old || :
 	sudo chown boni:boni *.data || :
+	exa --long --all --icons ./teste
+	ldd ./teste
+	./teste
 
 tt2:
 	-@rm /var/tmp/pgo/* || :
 	-@rm ./*.o || :
-	-@rm ./*.old || :
-	-@rm ./*.data || :
 	-@rm ./*.rlink || :
 	-@rm ./*.i || :
 	-@rm ./*.a || :
@@ -194,15 +195,9 @@ tt2:
 	-@rm ./myopt* || :
 	-@rm ./rsmain || :
 	-@rm ./teste || :
-	clang++ -fuse-ld=lld -gdwarf-4 -g -gline-tables-only -Wl,--no-rosegment -Wl,--build-id=sha1 -funique-internal-linkage-names -fbasic-block-sections=labels -static -static-libstdc++ -static-libgcc -pthread -fasynchronous-unwind-tables ./main.cpp -o ./teste
-# 	clang++ -fuse-ld=lld -gdwarf-4 -g -gline-tables-only -Wl,--no-rosegment ./main.cpp -o ./teste
-# 	perf record --no-buildid --no-buildid-cache --branch-any ./rsmain
-	sudo ocperf record --buildid-all -b ./teste
-	ocperf record --buildid-all -b ./teste
-	sudo chown boni:boni perf.data || :
-# 	--buildid-all --buildid-mmap --no-buildid  --no-buildid-cache
-# 	perf record --buildid-all --branch-filter any,u ./teste
-# 	/usr/bin/create_llvm_prof --binary=./rsmain --out=merged.profdata
-	/usr/bin/create_llvm_prof --binary=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/teste --profile=perf.data --out=merged.data
+	clang++ -fuse-ld=lld -gdwarf-4 -g -gline-tables-only -Wl,--no-rosegment -Wl,--build-id=sha1 -funique-internal-linkage-names -fbasic-block-sections=labels -static -static-libstdc++ -static-libgcc -pthread -fasynchronous-unwind-tables -fprofile-sample-use=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/merged.data ./main.cpp -o ./teste
+	exa --long --all --icons ./teste
+	ldd ./teste
+	./teste
 	sudo chown boni:boni *.old || :
 	sudo chown boni:boni *.data || :
