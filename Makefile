@@ -136,6 +136,9 @@ rustc:
 	-@rm /var/tmp/pgo/* || :
 	-@rm ./*.old || :
 	-@rm ./*.data || :
+	-@rm ./*.profraw || :
+	-@rm ./*.profdata || :
+	-@rm ./*.perfdata || :
 	-@rm ./*.o || :
 	-@rm ./*.i || :
 	-@rm ./*.a || :
