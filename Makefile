@@ -117,6 +117,7 @@ rust2:
 	-@rm ./myopt* || :
 	-@rm ./rsmain || :
 # 	/usr/bin/llvm-profdata merge -o /var/tmp/pgo/merged.profdata /var/tmp/pgo/*.profraw
+	/usr/bin/llvm-profdata merge -o merged.profdata *.profraw
 	clang $(CFLAGS_USE) ./clib.c -c -o ./clib.o
 	llvm-ar crus ./libxyz.a ./clib.o
 	rustc $(COMMON_FLAGS_USE) -o ./rsmain ./main.rs
@@ -142,7 +143,8 @@ rustc:
 	-@rm ./myopt* || :
 	-@rm ./rsmain || :
 	-@rm ./teste || :
-
+	-@rm ./*.profraw || :
+	-@rm ./*.perfdata || :
 
 
 tt1:
@@ -150,6 +152,9 @@ tt1:
 	-@rm ./*.o || :
 	-@rm ./*.old || :
 	-@rm ./*.data || :
+	-@rm ./*.profraw || :
+	-@rm ./*.profdata || :
+	-@rm ./*.perfdata || :
 	-@rm ./*.rlink || :
 	-@rm ./*.i || :
 	-@rm ./*.a || :
@@ -163,16 +168,32 @@ tt1:
 	-@rm ./myopt* || :
 	-@rm ./rsmain || :
 	-@rm ./teste || :
-# 	clang++ -fuse-ld=lld -flto=full -O3 -gdwarf-4 -g -gline-tables-only -Wl,--no-rosegment -Wl,--build-id=sha1 -funique-internal-linkage-names -fbasic-block-sections=labels -static -static-libstdc++ -static-libgcc -pthread ./main.cpp -o ./teste
+# 	clang++ -fuse-ld=lld -flto=full -O3 -g -Wl,--no-rosegment -Wl,--build-id=sha1 -static -static-libstdc++ -static-libgcc -pthread ./main.cpp -o ./teste
 	clang++ -fuse-ld=lld -flto=full -O3 -gdwarf-4 -g -gline-tables-only -Wl,--no-rosegment -Wl,--build-id=sha1 -funique-internal-linkage-names -fbasic-block-sections=labels -static -static-libstdc++ -static-libgcc -pthread -fasynchronous-unwind-tables -Wl,--lto-whole-program-visibility -fwhole-program-vtables -fforce-emit-vtables ./main.cpp -o ./teste
 # 	sudo ocperf record --buildid-all -b -e br_inst_retired.near_taken:pp ./teste
 # 	ocperf record --buildid-all -b -e br_inst_retired.near_taken:pp ./teste
-	sudo ocperf record --buildid-all -b ./teste
+# 	ocperf record --freq=max --buildid-all -g -b -e br_inst_retired.near_taken:pp ./teste
+	ocperf record --freq=max --buildid-all -g -b -o "samples-1.perfdata" ./teste
+	ocperf record --freq=max --buildid-all -g -b -o "samples-2.perfdata" ./teste
+	ocperf record --freq=max --buildid-all -g -b -o "samples-3.perfdata" ./teste
+# 	ocperf record --freq=max --buildid-all -g -b -o "samples-1.perfdata" ./teste
+# 	ocperf record --freq=max --buildid-all -g -b -o "samples-2.perfdata" ./teste
+# 	ocperf record --freq=max --buildid-all -g -b -o "samples-3.perfdata" ./teste
+# 	$OCPERF record -b -g -e br_inst_retired.near_taken -o $CWD/$i.data -- $CWD/$i
+# 	$OCPERF record -b -e br_inst_retired.near_taken -o $CWD/$SHORTNAME.data -- $COMMAND
+# 	ocperf.py record -F max -o "samples-1.prof" -b -e br_inst_retired.near_taken:pp -- /path/to/fdo-trained/dosbox ARGS
+# 	ocperf.py record -b -e BR_INST_RETIRED.ALL_BRANCHES:p program
+# 	sudo sysctl -w kernel.perf_event_max_sample_rate=100000
+# 	sudo sysctl -w kernel.perf_event_max_stack=1000
 # 	ocperf record --buildid-all -b ./teste
-	sudo chown boni:boni perf.data || :
-	/usr/bin/create_llvm_prof --binary=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/teste --profile=perf.data --out=merged.data
+	sudo chown boni:boni *.perfdata || :
+	sudo chown boni:boni *.profraw || :
+	/usr/bin/create_llvm_prof --binary=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/teste --profile=samples-1.perfdata --out=samples-1.profraw
+	/usr/bin/create_llvm_prof --binary=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/teste --profile=samples-2.perfdata --out=samples-2.profraw
+	/usr/bin/create_llvm_prof --binary=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/teste --profile=samples-3.perfdata --out=samples-3.profraw
 	sudo chown boni:boni *.old || :
-	sudo chown boni:boni *.data || :
+	sudo chown boni:boni *.perfdata || :
+	sudo chown boni:boni *.profraw || :
 	exa --long --all --icons ./teste
 	ldd ./teste
 	./teste
@@ -193,10 +214,12 @@ tt2:
 	-@rm ./myopt* || :
 	-@rm ./rsmain || :
 	-@rm ./teste || :
-# 	clang++ -fuse-ld=lld -flto=full -O3 -gdwarf-4 -g -gline-tables-only -Wl,--no-rosegment -Wl,--build-id=sha1 -funique-internal-linkage-names -fbasic-block-sections=labels -static -static-libstdc++ -static-libgcc -pthread -fprofile-sample-use=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/merged.data ./main.cpp -o ./teste
-	clang++ -fuse-ld=lld -flto=full -O3 -gdwarf-4 -g -gline-tables-only -Wl,--no-rosegment -Wl,--build-id=sha1 -funique-internal-linkage-names -fbasic-block-sections=labels -static -static-libstdc++ -static-libgcc -pthread -fasynchronous-unwind-tables -Wl,--lto-whole-program-visibility -fwhole-program-vtables -fforce-emit-vtables -fprofile-sample-use=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/merged.data ./main.cpp -o ./teste
+	/usr/bin/llvm-profdata merge --sample -o merged.profdata *.profraw
+# 	clang++ -fuse-ld=lld -flto=full -O3 -g -Wl,--no-rosegment -Wl,--build-id=sha1 -static -static-libstdc++ -static-libgcc -pthread -fprofile-sample-use=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/merged.profdata ./main.cpp -o ./teste
+	clang++ -fuse-ld=lld -flto=full -O3 -gdwarf-4 -g -gline-tables-only -Wl,--no-rosegment -Wl,--build-id=sha1 -funique-internal-linkage-names -fbasic-block-sections=labels -static -static-libstdc++ -static-libgcc -pthread -fasynchronous-unwind-tables -Wl,--lto-whole-program-visibility -fwhole-program-vtables -fforce-emit-vtables -fprofile-sample-use=/insilications/build/git-clr/cross-lang-lto-pgo-smoketest3/merged.profdata ./main.cpp -o ./teste
 	exa --long --all --icons ./teste
 	ldd ./teste
 	./teste
 	sudo chown boni:boni *.old || :
-	sudo chown boni:boni *.data || :
+	sudo chown boni:boni *.perfdata || :
+	sudo chown boni:boni *.profraw || :
