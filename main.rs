@@ -1,4 +1,5 @@
-// #[link(name = "xyz")]
+extern crate interesting;
+
 #[link(name = "xyz", kind="static")]
 extern "C" {
     pub fn c_always_inlined() -> u32;
@@ -16,4 +17,6 @@ fn main() {
     unsafe {
         println!("blub: {}", c_always_inlined() + c_never_inlined());
     }
+    interesting::hello();
+    interesting::hello();
 }

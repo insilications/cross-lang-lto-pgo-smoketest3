@@ -64,6 +64,7 @@ rust1:
 	-@rm ./teste || :
 	clang $(CFLAGS_GEN) ./clib.c -c -o ./clib.o
 	llvm-ar crus ./libxyz.a ./clib.o
+	rustc $(COMMON_FLAGS_GEN) -L. ./interesting.rs
 	rustc $(COMMON_FLAGS_GEN) -o ./rsmain ./main.rs
 # 	sudo sysctl -w kernel.perf_event_max_sample_rate=100000
 # 	sudo sysctl -w kernel.perf_event_max_stack=1000
@@ -131,6 +132,7 @@ rust2:
 # 	/usr/bin/llvm-profdata merge --sample -o merged.profdata *.profraw
 	clang $(CFLAGS_USE) ./clib.c -c -o ./clib.o
 	llvm-ar crus ./libxyz.a ./clib.o
+	rustc $(COMMON_FLAGS_USE) -L. ./interesting.rs
 	rustc $(COMMON_FLAGS_USE) -o ./rsmain ./main.rs
 # 	-@find . -type f \( -iname \*.bc -o -iname \*.o \) -exec llvm-dis "{}" \; || :
 # 	-@find /usr/lib64/rustlib/x86_64-unknown-linux-gnu/lib/ -type f \( -iname \*.bc -o -iname \*.o \) -exec llvm-dis "{}" \; || :
